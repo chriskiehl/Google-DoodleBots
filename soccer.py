@@ -16,18 +16,22 @@ import sys, os
 
 
 def grab(size=(457, 328, 811, 381)):
-	im = ImageGrab.grab(size)
-	a = im.getdata()
-	# s = time.time()
-	for i in range(0, len(a),7):
-		# if a[i] == (107, 150, 52) or a[i] == (255,255,255) or a[i] == (0,0,0) or a[i] == (95,133,46):
-		if a[i] == (107, 150, 52) or a[i] == (95,133,46):
+	imgData = ImageGrab.grab(size).getdata()
+	for i in range(0, len(imgData),7):
+		if isHit(imgData[i]):
 			print "hit!"
 			win32api.SetCursorPos((456+(i%354), 300))
-			if i>354*12 and (255,255,255) not in a and (95, 133, 46) in a:
+			if isAirball():
 				print 'air ball'
-				# time.sleep(.3)
 				click()
+
+def isHit(pixelVal):
+	return pixelVal == (107, 150, 52) or pixelVal == (95,133,46)
+
+def isAirball(index, imageData):
+	return index > 354*12 and (255,255,255) not in imageData and 
+						(95, 133, 46) in imageData
+
 	
 def press(x, delay=None):
     win32api.keybd_event(VK_CODE[x], 0,0,0)
@@ -48,12 +52,10 @@ def click():
 
 
 def play():
-
 	VK_CODE = {'left_arrow':0x25,
-		   'spacebar':0x20,
-           'right_arrow':0x27}
+			'spacebar':0x20,
+           	'right_arrow':0x27}
 	
-
 	print "Start!!"
 	click_retry()
 	s = time.time()
